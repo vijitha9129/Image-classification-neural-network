@@ -1,0 +1,24 @@
+name: Deploy to local Docker container
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: false
+          tags: vijitha97/classification-model:latest
+
+      - name: Run Docker container
+        run: docker run -p 8073:8073 -d vijitha97/classification-model:latest
