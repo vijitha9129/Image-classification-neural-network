@@ -1,9 +1,7 @@
 ### How to run?
-1. Get furniture.h5 file from here:
-	https://we.tl/t-VMw1n0juJc
 
-2. Install docker if you don't have it
-3. Run
+1. Install docker if you don't have it
+2. Run
 	```
 	docker-compose up --build (to build it)
     docker-compose up (to just run)
