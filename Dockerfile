@@ -11,7 +11,7 @@ WORKDIR /app
 
 COPY . /app
 
-##CMD ["python","model.py","app.py"]
+CMD ["python","app.py"]
 
-
-CMD python model.py && python app.py
+# if you want to new furniture.h5 file uncomment below line
+#CMD python model.py && python app.py
