@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+
+  model2app:
+
+    image: model2app
+
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+
+    volumes:
+      - .:/app
+      
+    ports:
+      - 8073:8073

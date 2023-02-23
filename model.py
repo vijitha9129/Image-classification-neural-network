@@ -8,7 +8,7 @@ source:
 
 '''
 
-from flask import *
+from flask import Flask, request
 import pandas as pd 
 import numpy as np 
 import glob as glob 
@@ -23,7 +23,7 @@ from tensorflow.keras import layers
 import pickle
 
 
-PICKLE_PATH = "model.pkl"
+#PICKLE_PATH = "model.pkl"
 app = Flask(__name__)
 
 
@@ -43,12 +43,12 @@ output_dir3 = 'resize/resize_sofa'
 
 ##loaded_model = pickle.load(open(PICKLE_PATH,'rb'))
 
-def save_model(model):
+#def save_model(model):
     
     ### Create a Pickle file using serialization 
-    pickle_out = open(PICKLE_PATH, "wb")
-    pickle.dump(model, pickle_out)
-    pickle_out.close()
+ #   pickle_out = open(PICKLE_PATH, "wb")
+ #   pickle.dump(model, pickle_out)
+ #   pickle_out.close()
 
 
 
@@ -118,7 +118,9 @@ def train_model():
     # Train the model
     history = model.fit(train_generator, epochs=epochs, validation_data=val_generator)
 
-    save_model(model)
+    ##save_model(model)
+   ## model.save_weights('furniture_classification.h5')
+    tf.keras.models.save_model(model,"furniture.h5")
 
     # Plot the training and validation accuracy and loss
     acc = history.history['accuracy']
@@ -143,21 +145,31 @@ def train_model():
     plt.show()
 
 
-@app.route("/",methods=["GET","POST"])
-def index():
-    if request.method == 'POST':
-        start_time = dt.datetime.now()
-        model_image = request.files["input-image"]
-        img         = Image.open(model_image)
-        plt.imshow(img, interpolation='none')
-        plt.axis("off")
-        return render_template(
-            'index.html',
-            img  = True)
-        
-    return render_template('index.html')
+def load_image(img_path, show=False):
+
+    img = image.load_img(img_path, target_size=(224, 224))
+    img_tensor = image.img_to_array(img)                    # (height, width, channels)
+    img_tensor = np.expand_dims(img_tensor, axis=0)         # (1, height, width, channels), add a dimension because the model expects this shape: (batch_size, height, width, channels)
+    img_tensor /= 255.                                      # imshow expects values in the range [0, 1]
+
+    if show:
+        plt.imshow(img_tensor[0])                           
+        plt.axis('off')
+        plt.show()
+
+    return img_tensor
 
 
 if __name__ == '__main__':
     resize_img()
     train_model()
+
+    model = load_model("furniture.h5")
+
+    img_path = '/home/vijitha/tact/fulhaus-assignment-vijitha/resize/resize_bed/140 cm double bed.jpg'    # dog
+
+    # load a single image
+    new_image = load_image(img_path)
+
+    # check prediction
+    pred = model.predict(new_image)
