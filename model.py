@@ -8,7 +8,7 @@ source:
 
 '''
 
-
+from flask import *
 import pandas as pd 
 import numpy as np 
 import glob as glob 
@@ -20,6 +20,11 @@ import matplotlib.image as mpimg
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
+import pickle
+
+
+PICKLE_PATH = "model.pkl"
+app = Flask(__name__)
 
 
 bed = glob.glob('data/Bed/*.jpg')
@@ -34,6 +39,18 @@ input_dir2 = 'data/Chair'
 output_dir2 = 'resize/resize_chair'
 input_dir3= 'data/Sofa'
 output_dir3 = 'resize/resize_sofa'
+
+
+##loaded_model = pickle.load(open(PICKLE_PATH,'rb'))
+
+def save_model(model):
+    
+    ### Create a Pickle file using serialization 
+    pickle_out = open(PICKLE_PATH, "wb")
+    pickle.dump(model, pickle_out)
+    pickle_out.close()
+
+
 
 
 def resize_img():
@@ -52,7 +69,7 @@ def resize_img():
         resized_image = cv2.resize(image, new_size)
         cv2.imwrite(os.path.join(output_dir3, file_name), resized_image)
 
-def startpy():
+def train_model():
     
     batch_size = 32
     epochs = 10
@@ -101,7 +118,7 @@ def startpy():
     # Train the model
     history = model.fit(train_generator, epochs=epochs, validation_data=val_generator)
 
-    model.save_weights('furniture_classification.h5')
+    save_model(model)
 
     # Plot the training and validation accuracy and loss
     acc = history.history['accuracy']
@@ -126,7 +143,21 @@ def startpy():
     plt.show()
 
 
-  
+@app.route("/",methods=["GET","POST"])
+def index():
+    if request.method == 'POST':
+        start_time = dt.datetime.now()
+        model_image = request.files["input-image"]
+        img         = Image.open(model_image)
+        plt.imshow(img, interpolation='none')
+        plt.axis("off")
+        return render_template(
+            'index.html',
+            img  = True)
+        
+    return render_template('index.html')
+
+
 if __name__ == '__main__':
     resize_img()
-    startpy()
+    train_model()
