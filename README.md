@@ -11,11 +11,13 @@
 ### How to test it?
 1. Once you run the above commands, go to browser and then paste this url
 	```
-		http://localhost:8000
+		http://localhost:8073
 	```
 2. Start uploading sample files. You can get sample files from here:
-	/samples/
+	``` 
+    /samples/
 		1.jpg
 		2.jpg
-
+   
+    ```
 
