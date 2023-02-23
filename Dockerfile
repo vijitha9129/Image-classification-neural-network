@@ -11,4 +11,7 @@ WORKDIR /app
 
 COPY . /app
 
-CMD ["python","app.py"]
+##CMD ["python","model.py","app.py"]
+
+
+CMD python model.py && python app.py
