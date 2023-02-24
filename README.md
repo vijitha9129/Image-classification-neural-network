@@ -19,6 +19,19 @@
    
     ```
 ### Github action CI/CD implementation
-Everytime achange is pushed to GIT repository, it's going to build and publish a docker image for the application using GitHub actions.
+Everytime ac hange is pushed to GIT repository, it's going to build and publish a docker image for the application using GitHub actions.
+
+run the below command to trigger the deployment
+
+```
+   docker run -p 8073:8073 -d vijitha97/classification-model:latest
+```
+
+The app will run in below URL
+
+``` 
+http://localhost:8073 
+
+```
 
 
