@@ -18,3 +18,7 @@
 		2.jpg
    
     ```
+### Github action CI/CD implementation
+Everytime achange is pushed to GIT repository, it's going to build and publish a docker image for the application using GitHub actions.
+
+
